@@ -135,6 +135,11 @@ main .fondo-img {
     margin-bottom: 40px;
     font-weight: 400;
 }
+.product img:hover{
+    transform: scale(1.5);
+    transition: 0.45s;
+    cursor: pointer;
+}
 
 .products {
     display: grid;
