@@ -153,9 +153,8 @@ main .fondo-img {
 }
 
 .product img {
-      width: 50%;
+        width: 50%;
     object-fit: contain;
-    background-color: #f9f9f9;
     margin-bottom: 15px;
     height: 350px;
 }
