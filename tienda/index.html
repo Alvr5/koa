@@ -1,11 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOA - Tienda</title>
+    <title>Tienda | KOA Project</title>
+    <link rel="stylesheet" href="../index.css">
+    <link rel="shortcut icon" href="../logo.png" type="image/x-icon">
 </head>
 <body>
-    
-</body>
+    <header>
+        <section class="section1">
+            <div class="left">
+                <a href="https://www.instagram.com/koaproject_"><img src="../instagramicon1.png" alt="Instagram"></a>
+                <a href="https://www.tiktok.com/@koaproject_"><img src="../tik tok.png" alt="TikTok"></a>
+            </div>
+            <div class="center"><p>Hecho a mano, con calma y mucho amor</p></div>
+        </section>
+
+        <div class="headertitulo">
+            <section class="section2">
+                <a href="../index.html"><img src="../logo.png" alt="Logo" class="logo"></a>
+                <div class="carrito">0<img src="../carrito.png" style="margin-left: 10px;" alt="carrito"></div>
+            </section>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="index.html" class="active">Tienda</a></li>
+                    <li><a href="#">Nosotros</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="tienda-container">
+        <header class="tienda-header">
+            <h1>Nuestra Colección</h1>
+            <p>Piezas exclusivas tejidas a mano.</p>
+        </header>
+
+        <aside class="filtros">
+            <span>Filtrar por: Todo | Bolsos | Accesorios</span>
+        </aside>
+
+       <div class="products-grid">
+    <div class="producto" 
+         data-img-blanco="../product1.png" 
+         data-img-verde="../verde.png" 
+         data-img-beige="../product1_beige.png" 
+         data-img-cafe="../product1_cafe.png">
+        <div class="product-img-container">
+            <img src="../product1.png" alt="Bolso pequeño perlado">
+        </div>
+        <h3>Bolso pequeño perlado</h3>
+        <p>Ideal para tus esenciales.</p>
+        <span class="precio">5,00€</span>
+        <br>
+        <button class="btn-ver">Ver detalles</button>
+    </div>
+
+    <div class="producto" 
+         data-img-blanco="../product2.png" 
+         data-img-verde="../produc2blue.png" 
+         data-img-beige="../product2_beige.png" 
+         data-img-cafe="../marron.png">
+        <div class="product-img-container">
+            <img src="../product2.png" alt="Bolso marrón">
+        </div>
+        <h3>Bolso marrón</h3>
+        <p>Elegancia artesanal.</p>
+        <span class="precio">12,00€</span>
+        <br>
+        <button class="btn-ver">Ver detalles</button>
+    </div>
+</div>
+    </main>
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+            <div class="modal-image">
+                <img id="modalImg" src="" alt="Producto">
+            </div>
+            <div class="modal-info">
+                <h2 id="modalTitle">Título</h2>
+                <p id="modalDescription">Descripción</p>
+                <br>
+                <span class="precio" id="modalPrice">0,00€</span>
+                
+                <div class="color-selection">
+                    <h4>Personaliza tu color:</h4>
+                    <div class="colors">
+                        <div class="color-opt" style="background: #ffffff; border: 1px solid #ddd;" data-color="Blanco"></div>
+                        <div class="color-opt" style="background: #BBC5D1;" data-color="Verde"></div>
+                        <div class="color-opt" style="background: #D2B48C;" data-color="Beige"></div>
+                        <div class="color-opt" style="background: #5d4037;" data-color="Café"></div>
+                    </div>
+                    <p id="selectedColorText">Seleccionado: <span>Ninguno</span></p>
+                </div>
+                
+                <button class="btn-buy">Agregar al Carrito</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  const modal = document.getElementById("productModal");
+const closeModal = document.querySelector(".close-modal");
+const modalImg = document.getElementById("modalImg");
+let productoActivo = null; // Variable para guardar el producto que abrimos
+
+document.querySelectorAll('.btn-ver').forEach(btn => {
+    btn.addEventListener('click', () => {
+        productoActivo = btn.closest('.producto'); // Guardamos el producto actual
+        
+        const title = productoActivo.querySelector('h3').innerText;
+        const price = productoActivo.querySelector('.precio').innerText;
+        const imgSrc = productoActivo.querySelector('img').src;
+        const desc = productoActivo.querySelector('p').innerText;
+
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalPrice").innerText = price;
+        modalImg.src = imgSrc;
+        document.getElementById("modalDescription").innerText = desc;
+
+        // Reset de la selección de color al abrir
+        document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+        document.getElementById("selectedColorText").querySelector('span').innerText = "Ninguno";
+
+        modal.style.display = "block";
+    });
+});
+
+closeModal.onclick = () => modal.style.display = "none";
+
+document.querySelectorAll('.color-opt').forEach(opt => {
+    opt.onclick = function() {
+        document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+        
+        const nombreColor = this.getAttribute('data-color').toLowerCase();
+        document.getElementById("selectedColorText").querySelector('span').innerText = nombreColor;
+
+        // Buscamos la imagen específica en el 'productoActivo' usando el data-attribute
+        // Ejemplo: si el color es "verde", busca "data-img-verde" en el div del producto
+        const nuevaImg = productoActivo.getAttribute(`data-img-${nombreColor}`);
+
+        if (nuevaImg) {
+            modalImg.src = nuevaImg;
+        } else {
+            // Si no hay imagen para ese color, vuelve a la principal
+            modalImg.src = productoActivo.querySelector('img').src;
+        }
+    }
+});
+</script>
+
+<style>
+    @media (max-width: 768px) {
+    .modal-body {
+        grid-template-columns: 1fr; /* Una sola columna en el móvil */
+    }
+    .modal-content {
+        width: 90%;
+        margin: 10% auto;
+        padding: 20px;
+    }
+}
+</style>
+    </body>
 </html>
