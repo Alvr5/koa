@@ -117,5 +117,87 @@
         <p>&copy; 2026 KOA Project. Todos los derechos reservados.</p>
     </div>
 </footer>
+
+<!-- Modal de Producto -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+            <div class="modal-image">
+                <img id="modalImg" src="" alt="Producto">
+            </div>
+            <div class="modal-info">
+                <h2 id="modalTitle">Título</h2>
+                <p id="modalDescription">Descripción</p>
+                <br>
+                <span class="precio" id="modalPrice">0,00€</span>
+                
+                <div class="color-selection">
+                    <h4>Escoge un color:</h4>
+                    <div class="colors">
+                        <div class="color-opt" style="background: #fff; border: 1px solid #ddd;" data-color="Blanco"></div>
+                        <div class="color-opt" style="background: #BBC5D1;" data-color="Verde"></div>
+                        <div class="color-opt" style="background: #D2B48C;" data-color="Beige"></div>
+                    </div>
+                    <p id="selectedColorText">Color: <span>Selecciona uno</span></p>
+                </div>
+                
+                <button class="btn-buy">Confirmar y Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+
+<script>
+  const modal = document.getElementById("productModal");
+const closeModal = document.querySelector(".close-modal");
+const modalImg = document.getElementById("modalImg"); // Referencia directa a la imagen del modal
+
+// Función para abrir el modal con info del producto
+document.querySelectorAll('.product').forEach(productCard => {
+    productCard.addEventListener('click', (e) => {
+        if(e.target.tagName === 'BUTTON') return;
+
+        const title = productCard.querySelector('h3').innerText;
+        const price = productCard.querySelector('.precio').innerText;
+        const imgSrc = productCard.querySelector('img').src;
+        const desc = productCard.querySelector('p').innerText;
+
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalPrice").innerText = price;
+        modalImg.src = imgSrc; // Imagen inicial (la del producto clicado)
+        document.getElementById("modalDescription").innerText = desc;
+
+        modal.style.display = "block";
+    });
+});
+
+// Cerrar modal
+closeModal.onclick = () => modal.style.display = "none";
+window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
+
+// Selección de color y cambio de imagen
+document.querySelectorAll('.color-opt').forEach(opt => {
+    opt.onclick = function() {
+        // 1. Gestionar clases activas
+        document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+
+        // 2. Obtener el nombre del color
+        const nombreColor = this.getAttribute('data-color');
+        document.getElementById("selectedColorText").querySelector('span').innerText = nombreColor;
+
+        // 3. Lógica para cambiar la imagen según el color
+        // Convertimos a minúsculas para evitar errores de escritura (Verde vs verde)
+        if (nombreColor.toLowerCase() === "verde") {
+            modalImg.src = "verde.png"; 
+        } else if (nombreColor.toLowerCase() === "blanco") {
+            modalImg.src = "product1.png"; // O la imagen que corresponda al blanco
+        } else if (nombreColor.toLowerCase() === "beige") {
+            modalImg.src = "marron.png"; // O la imagen que corresponda al marrón
+        }
+    }
+});
+</script>
 </html>
