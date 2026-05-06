@@ -26,6 +26,12 @@
         <div class="headertitulo">
             <section class="section2">
                 <img src="logo.png" alt="Logo" class="logo">
+                <div class="perfil">
+                        <a href="administrador.html">
+                        <img src="perfil.png" title="perfil" alt="perfil">
+                    </a>
+                </div>
+                <div class="carrito"><img src="carrito.png" alt="carrito"></div>
             </section>
             <section>
                 <nav>
@@ -135,9 +141,10 @@
                 <div class="color-selection">
                     <h4>Escoge un color:</h4>
                     <div class="colors">
-                        <div class="color-opt" style="background: #fff; border: 1px solid #ddd;" data-color="Blanco"></div>
+                        <div class="color-opt" style="background: #ff6e20;" data-color="Blanco"></div>
                         <div class="color-opt" style="background: #BBC5D1;" data-color="Verde"></div>
                         <div class="color-opt" style="background: #D2B48C;" data-color="Beige"></div>
+                        <div class="color-opt" style="background: linear-gradient(#D2B48C,#BBC5D1);" data-color="Café"></div>
                     </div>
                     <p id="selectedColorText">Color: <span>Selecciona uno</span></p>
                 </div>
@@ -196,6 +203,8 @@ document.querySelectorAll('.color-opt').forEach(opt => {
             modalImg.src = "product1.png"; // O la imagen que corresponda al blanco
         } else if (nombreColor.toLowerCase() === "beige") {
             modalImg.src = "marron.png"; // O la imagen que corresponda al marrón
+        } else if (nombreColor.toLowerCase() === "café") {
+            modalImg.src = "cafe.png"; // O la imagen que corresponda al café
         }
     }
 });

@@ -448,6 +448,29 @@ footer {
     font-family: inherit;
 }
 
+.perfil{
+    position: z;
+    z-index: 1;
+    display: flex;
+    position: relative;
+    right: 0px;
+    left: 1710px;
+    scale: 0.7;
+    position: absolute;
+}
+
+
+.carrito{
+   position: z;
+    z-index: 1;
+    display: flex;
+    position: relative;
+    right: 0px;
+    left: 1750px;
+    scale: 0.7;
+    position: absolute;
+}
+
 
 /*MOVILES*/
 
