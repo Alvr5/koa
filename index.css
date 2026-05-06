@@ -203,3 +203,9 @@ color: #d4a373;
     font-weight: bold;
     font-size: 20px;
 }
+
+.fondo-img-hero {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
