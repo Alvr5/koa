@@ -66,6 +66,7 @@ body {
     background-color: #F2EFE8;
     border-bottom: 1px solid #eee;
     padding: 20px 0;
+    position:sticky;
 }
 
 .section2 {
@@ -125,9 +126,12 @@ main .fondo-img {
 
 /* Productos / Secciones de la Clínica */
 .bestsellers {
-    max-width: 1200px;
-    margin: 50px auto;
+       max-width: 1200px;
+    margin: 0px auto;
     text-align: center;
+    justify-content: center;
+    display: flow;
+    margin: 60px auto;
 }
 
 .bestsellers h2 {
@@ -142,9 +146,9 @@ main .fondo-img {
 }
 
 .products {
-    display: grid;
+       display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
+    gap: 0px;
     padding: 0 20px;
 }
 
@@ -153,7 +157,11 @@ main .fondo-img {
     border-radius: 4px;
     transition: transform 0.3s;
     justify-content: center;
-    height: 540px;
+    height: 620px;
+    animation-name: opacidad;
+    animation-duration: 1s;
+    background: #80808005;
+    width: 410px;
 }
 
 .product:hover {
@@ -161,7 +169,7 @@ main .fondo-img {
 }
 
 .product img {
-        width: 50%;
+       width: 80%;
     object-fit: contain;
     margin-bottom: 15px;
     height: 350px;
@@ -182,6 +190,13 @@ main .fondo-img {
     position: relative;
 }
 
+.bestsellers h2 {
+      font-family: sans-serif;
+    font-weight: bold;
+    color: #d4a373;
+    margin-bottom: 70px;
+}
+
 .product button {
     display: block;
     margin-top: 10px;
@@ -191,6 +206,7 @@ main .fondo-img {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    border-radius: 5px;
 }
 
 .product button:hover {
@@ -209,6 +225,7 @@ color: #d4a373;
         color: #d4a373;
     font-weight: bold;
     font-size: 20px;
+    font-family: sans-serif;
 }
 
 .fondo-img-hero {
@@ -228,4 +245,118 @@ color: #d4a373;
     max-width: 250px;
     width: 100%;
     margin: 0 auto;
+}
+
+@keyframes opacidad {
+    0%{
+        opacity: 0;
+    }
+
+    100%{
+        opacity: 1;
+    }   
+}
+
+
+
+footer {
+    background-color: #F2EFE8; /* Color crema oscuro para diferenciar del fondo */
+    padding: 60px 0 20px 0;
+    margin-top: 100px;
+    border-top: 1px solid #e9e2d7;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    background-color: #F2EFE8; /* Color tierra muy suave */
+    grid-template-columns: 2fr 1fr 1.5fr; /* La primera columna es más ancha */
+    gap: 50px;
+    padding: 0 20px;
+}
+
+.footer-column h3 {
+    font-size: 1.8rem;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+.footer-column h4 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    color: #8c7851; /* Tono bronce/tierra */
+}
+
+.footer-column p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column ul li {
+    margin-bottom: 12px;
+}
+
+.footer-column ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.85rem;
+    transition: 0.3s;
+}
+
+.footer-column ul li a:hover {
+    color: #d4a373;
+    padding-left: 5px;
+}
+
+/* Newsletter */
+.newsletter {
+    display: flex;
+    margin-top: 15px;
+}
+
+.newsletter input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: white;
+    font-family: inherit;
+    flex-grow: 1;
+}
+
+.newsletter button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.newsletter button:hover {
+    background-color: #d4a373;
+}
+
+/* Socials e inferior */
+.footer-socials img {
+    width: 20px;
+    margin-right: 15px;
+    filter: grayscale(1);
+    opacity: 0.6;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.75rem;
+    color: #999;
 }
