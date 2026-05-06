@@ -1,0 +1,242 @@
+body{
+    margin: 0;
+}
+
+header{
+    width: 100%;
+}
+
+header .section1{
+       width: 100%;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    font-family: sans-serif;
+}
+
+header .section1 .left{
+     display: flex;
+    align-items: center;
+    justify-content: start;
+    position: relative;
+    gap: 20px;
+}
+
+header .section1 .left .center{
+    width: max-content;
+    display: flex;
+    align-items: center;
+}
+
+
+/* Configuraciones Generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Playfair Display', serif; /* Una fuente elegante para títulos */
+    background-color: #fdfbf7; /* Blanco roto/crema muy suave */
+    color: #333;
+}
+
+/* Sección 1: Barra de aviso superior */
+.section1 {
+    background-color: #f2e9e1; /* Color tierra muy suave */
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 50px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.section1 .left img {
+    width: 18px;
+    margin-right: 15px;
+    opacity: 1;
+}
+
+/* Sección 2: Cabecera Principal */
+.headertitulo {
+    background-color: #F2EFE8;
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+}
+
+.section2 {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section2 h1 {
+    font-size: 2.5rem;
+    letter-spacing: 5px;
+    font-weight: 300;
+}
+
+.section2 img {
+    width: 24px;
+    cursor: pointer;
+}
+
+/* Navegación */
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin-top: 20px;
+}
+
+nav ul li {
+    margin: 0 20px;
+    color: #F2EFE8;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: #d4a373; /* Dorado suave */
+}
+
+/* Main: Banner Principal */
+main .fondo-img {
+    width: 100%;
+    height: 60vh;
+    background-color: #ddd; /* Temporal hasta que pongas tu imagen */
+    object-fit: cover;
+}
+
+/* Productos / Secciones de la Clínica */
+.bestsellers {
+    max-width: 1200px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.bestsellers h2 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.product {
+     padding: 20px;
+    border-radius: 4px;
+    transition: transform 0.3s;
+    justify-content: center;
+    height: 540px;
+}
+
+.product:hover {
+    transform: translateY(-5px);
+}
+
+.product img {
+      width: 50%;
+    object-fit: contain;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+    height: 350px;
+}
+
+.product h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.product span {
+    font-weight: bold;
+    color: #d4a373;
+}
+
+.section2 .logo{
+       width: 100px;
+    position: relative;
+}
+
+.product button {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #d4a373;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.product button:hover {
+cursor: pointer;
+background-color: transparent;
+border: 1px solid #d4a373;
+color: #d4a373;
+}
+
+.product .boton{
+    justify-content: center;
+    display: flex;
+}
+
+.product .precio{
+        color: #d4a373;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+ .img-zoom-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.img-zoom-lens {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+   width: 100px;  /* Ancho del lente */
+    height: 100px; /* Alto del lente (Igual para que sea cuadrado) */
+    background-color: rgba(255, 255, 255, 0.4);
+    cursor: crosshair;
+}
+
+.img-zoom-result {
+    border: 1px solid #d4d4d4;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    right: -210px; /* Lo mueve a la derecha de la imagen */
+    top: 0;
+    z-index: 10;
+    visibility: hidden; /* Se oculta por defecto */
+}
+
+/* Mostrar zoom solo al pasar el mouse */
+.img-zoom-container:hover .img-zoom-result {
+    visibility: visible;
+}
+
+.fondo-img-hero {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
