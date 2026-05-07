@@ -134,10 +134,13 @@ main .fondo-img {
     margin: 60px auto;
 }
 
-.bestsellers h2 {
+.bestsellers h1 {
     font-size: 2rem;
     margin-bottom: 40px;
     font-weight: 400;
+    color: #d4a373;
+    font-weight: bold;
+    font-family: sans-serif;
 }
 .product img:hover{
     transform: scale(1.5);
@@ -364,13 +367,90 @@ footer {
 }
 
 
+/* Contenedor de la tienda */
+.tienda-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.tienda-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.tienda-header h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+}
+
+/* Grid de productos responsivo */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 40px 25px; /* Espacio entre productos */
+}
+
+/* Estilo de cada tarjeta de producto */
+.producto {
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.producto:hover {
+    transform: translateY(-5px);
+}
+
+.producto-img-container {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.producto img {
+    width: 100%;
+    height: 350px;
+    object-fit: contain; /* Hace que todas las fotos tengan el mismo tamaño sin deformarse */
+    transition: scale 0.5s;
+}
+
+.producto:hover img {
+    scale: 1.05;
+}
+
+.producto h3 {
+    font-size: 1.1rem;
+    margin: 10px 0 5px;
+    font-weight: 400;
+}
+
+.producto p {
+    color: #777;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.btn-ver {
+    background: transparent;
+    border: 1px solid #333;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-ver:hover {
+    background: #333;
+    color: white;
+}
 
 
 
-
-
-
-
+.product-img-container img{
+    width: 220px;
+}
 
 
 
