@@ -631,7 +631,7 @@ footer {
 
 /*MOVILES*/
 
-@media (max-width: 700px) {
+@media (max-width: 400px) {
     
     body{
         overflow-x: hidden;
@@ -692,10 +692,8 @@ footer {
     left: 330px;
     }
     .carrito{
-       position: z;
     z-index: 1;
     display: flex;
-    position: relative;
     scale: 0.7;
     position: absolute;
     bottom: 223px;
