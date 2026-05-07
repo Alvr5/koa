@@ -683,20 +683,20 @@ footer {
     }
 
     .perfil{
-    z-index: 1;
+       z-index: 1;
     display: flex;
     scale: 0.7;
     position: absolute;
     bottom: 220px;
     width: max-content;
-    left: 330px;
+    left: 250px;
     }
     .carrito{
-    z-index: 1;
+       z-index: 1;
     display: flex;
     scale: 0.7;
     position: absolute;
     bottom: 223px;
-    left: 290px;
+    left: 275px;
     }
 }
