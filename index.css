@@ -552,6 +552,82 @@ footer {
 }
 
 
+.producto img{
+    object-fit: contain;
+    width: 250px;
+}
+
+
+
+  /* Estilos específicos para la tienda que no estén en tu index.css */
+        .tienda-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .tienda-header { text-align: center; margin-bottom: 50px; }
+        
+        .products-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 40px 25px; 
+        }
+
+        .producto { text-align: center; transition: 0.3s; padding: 15px; border-radius: 10px; }
+        .producto:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); transform: translateY(-5px); }
+        
+        .product-img-container { background: #f9f9f9; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+        .product-img-container img { width: 250px; height: 300px; object-fit: contain; }
+
+        .btn-ver { 
+            background: #333; color: white; border: none; padding: 10px 25px; 
+            cursor: pointer; margin-top: 10px; border-radius: 5px; transition: 0.3s;
+        }
+        .btn-ver:hover { background: #555; }
+
+        /* Ajuste Modal Responsivo */
+        @media (max-width: 768px) {
+            .modal-body { grid-template-columns: 1fr !important; }
+            .modal-content { width: 95% !important; margin: 5% auto; }
+            .modal-image img { height: 250px !important; }
+        }
+
+
+        .registro-container{
+                margin: 300px auto;
+    display: block;
+    max-width: 300px;
+        }
+
+        .registro-container form{
+       flex-direction: column;
+    padding: 20px 0px;
+    text-align: center;
+        }
+
+        .registro-container h2{
+        font-family: sans-serif;
+        text-align: center;
+        width: 100%;
+        }
+
+        .registro-container form input{
+    padding: 10px 10px;
+    margin: 5px 0px;
+    text-align: center;
+    margin-bottom: 15px;
+    border: none;
+    background-color: rgba(128, 128, 128, 0.103);
+    border-radius: 4px;
+}
+
+.registro-container form button{
+    padding: 10px 15px;
+    background-color: #d4a373;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+
 /*MOVILES*/
 
 @media (max-width: 700px) {
