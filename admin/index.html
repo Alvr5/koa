@@ -3,50 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOA - Administrador</title>
-    <link rel="stylesheet" href="../index.css"> </head>
+    <title>KOA - Registro</title>
+    <link rel="stylesheet" href="../index.css">
+</head>
 <body>
-    <h2>Panel de Administración KOA</h2>
+    <h2>Crear Cuenta de Administrador</h2>
 
-    <form id="adminLoginForm">
+    <form id="adminSignupForm">
         <label for="correo">Correo:</label><br>
         <input type="email" id="correo" name="correo" required><br><br>
 
         <label for="contraseña">Contraseña:</label><br>
-        <input type="password" id="contraseña" name="contraseña" required><br><br>
+        <input type="password" id="contraseña" name="contraseña" required minlength="6"><br><br>
         
-        <button type="submit">Iniciar Sesión</button>
+        <button type="submit">Registrarme</button>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-    // 1. Configuración de Supabase (He mantenido tu URL y Key)
-    const _supabase = supabase.createClient('https://ejizpmhlqkhjxbbxdcxo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ');
+        // 1. Configuración de Supabase
+        const _supabase = supabase.createClient('https://ejizpmhlqkhjxbbxdcxo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ');
 
-    const loginForm = document.getElementById('adminLoginForm');
+        const signupForm = document.getElementById('adminSignupForm');
 
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); 
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
 
-        const email = document.getElementById('correo').value;
-        const password = document.getElementById('contraseña').value;
+            const email = document.getElementById('correo').value;
+            const password = document.getElementById('contraseña').value;
 
-        // --- CAMBIO CLAVE AQUÍ: signInWithPassword en lugar de signUp ---
-        // Y usamos '_supabase' que es como llamaste a la constante arriba
-        const { data, error } = await _supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
+            // MÉTODO SIGNUP
+            const { data, error } = await _supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                // Si sale error 400 aquí, suele ser "User already registered" o contraseña muy corta
+                alert("Error al registrar: " + error.message);
+            } else {
+                // IMPORTANTE: Si la confirmación de email está activa, el usuario no podrá loguearse
+                // hasta que haga clic en el link que le llegará a su correo.
+                if (data.user && data.user.identities && data.user.identities.length === 0) {
+                    alert("¡Este correo ya está registrado! Intenta iniciar sesión.");
+                } else {
+                    alert("¡Registro enviado! Revisa tu email para confirmar la cuenta.");
+                    window.location.href = "../admin/index.html"; // Redirigir al login
+                }
+            }
         });
-
-        if (error) {
-            // Si te sigue saliendo error 400, mira si el error.message dice "Invalid login credentials"
-            alert("Error: " + error.message);
-        } else {
-            alert("¡Bienvenido, Administrador!");
-            // Asegúrate de que esta ruta sea correcta en tu estructura de carpetas
-            window.location.href = "../admin/dashboard/index.html";
-        }
-    });
     </script>
 </body>
 </html>
