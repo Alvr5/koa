@@ -1,35 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOA- Administrador</title>
-</head>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-     const SUPABASE_URL = 'https://ejizpmhlqkhjxbbxdcxo.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ'
-
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-  const loginForm = document.querySelector('form')
-  const emailInput = document.getElementById('correo')
-  const passwordInput = document.getElementById('contraseña')
-      const { data, error } = await supabase.auth.signUp({
-          email: emailInput.value,
-          password: passwordInput.value,
-        })
-</script>
+    <title>KOA - Administrador</title>
+    <link rel="stylesheet" href="../index.css"> </head>
 <body>
-    <h2>Panel de Administración</h2>
+    <h2>Panel de Administración KOA</h2>
 
-    <form action="" method="post">
+    <form id="adminLoginForm">
         <label for="correo">Correo:</label><br>
-        <input type="email" id="correo" name="correo"><br><br>
+        <input type="email" id="correo" name="correo" required><br><br>
 
         <label for="contraseña">Contraseña:</label><br>
-        <input type="password" id="contraseña" name="contraseña"><br><br>
-        <input type="submit" value="Iniciar Sesión">
+        <input type="password" id="contraseña" name="contraseña" required><br><br>
+        
+        <button type="submit">Iniciar Sesión</button>
     </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 1. Configuración de Supabase
+        const _supabase = supabase.createClient('https://ejizpmhlqkhjxbbxdcxo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ');
+
+        const loginForm = document.getElementById('adminLoginForm');
+
+        // 2. Función de Inicio de Sesión
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita que la página se recargue
+
+            const email = document.getElementById('correo').value;
+            const password = document.getElementById('contraseña').value;
+
+            // Usamos signInWithPassword para loguear (signUp es para crear cuenta nueva)
+            const { data, error } = await _supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("¡Bienvenido, Administrador!");
+                // Aquí podrías redirigir a la página real de gestión
+                // window.location.href = "dashboard.html";
+            }
+        });
+    </script>
 </body>
 </html>
