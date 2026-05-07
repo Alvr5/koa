@@ -631,7 +631,7 @@ footer {
 
 /*MOVILES*/
 
-@media (max-width: 300px) {
+@media (max-width: 400px) {
     
     body{
         overflow-x: hidden;
