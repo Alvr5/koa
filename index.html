@@ -1,87 +1,193 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOA - Registro</title>
-    <link rel="stylesheet" href="../index.css">
+    <title>KOA</title>
+    <meta name="description" content="Crochet a mano, piezas únicas para tu día a día. Descubre el arte de lo artesano con KOA Project.">
+    <link rel="stylesheet" href="index.css">
+    <meta name="keywords" content="crochet, regalo, regalos, bolsos hechos a mano">
+    <link rel="shortcut icon" href="Group 17 (2).png" type="image/x-icon">
+    <meta name="google-site-verification" content="XPIbhl4qsI5apz69GH9fnMqQOYJmYcqk9GgQx5n7xPE" />
 </head>
 <body>
-    <div class="registro-container">
-        <h2>Crear Cuenta de Administrador</h2>
+    <header>
+        <section class="section1">
+            <div class="left">
+                <a href="https://www.instagram.com/koaproject_">
+                    <img src="instagramicon1.png" alt="Instagram">
+                </a>
+                <a href="https://www.tiktok.com/@koaproject_">
+                    <img src="tik tok.png" alt="Tik tok">
+                </a>
+            </div>
+            <div class="center">
+                <p>Descubre el arte que construimos con las manos</p>
+            </div>
+        </section>
 
-        <form id="adminSignupForm">
-            <label for="correo">Correo:</label><br>
-            <input type="email" id="correo" name="correo" required><br><br>
+        <div class="headertitulo">
+            <section class="section2">
+                <img src="logo.png" alt="Logo" class="logo">
+                <div class="perfil">
+                        <a href="admin/">
+                        <img src="perfil.png" title="perfil" alt="perfil">
+                    </a>
+                </div>
+                <div class="carrito"><img src="carrito.png" alt="carrito"></div>
+            </section>
+            <section>
+                <nav>
+                    <ul>
+                        <li><a href="https://alvr5.github.io/koa/">Inicio</a></li>
+                        <li><a href="tienda/">Tienda</a></li>
+                        <li><a href="">Nosotros</a></li>
+                        <li><a href="">Contacto</a></li>
+                    </ul>
+                </nav>
+            </section>
+        </div>
+    </header>
 
-            <label for="contraseña">Contraseña:</label><br>
-            <input type="password" id="contraseña" name="contraseña" required minlength="6"><br><br>
-            
-            <button type="submit" id="btnRegistrar">Registrarme</button>
-        </form>
-    </div>
-
-    <!-- Librería de Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   <main>
+    <img src="qué nos decís de esta funda a nosotras nos encanta!! 🎀🤍Disponible en cualquier color, con o si (2) 1.png" class="fondo-img-hero" alt="Imagen fondo">
     
-    <script>
-        // 1. Configuración de Supabase (He unificado el nombre a 'supabase')
-        const supabaseUrl = 'https://ejizpmhlqkhjxbbxdcxo.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ';
-        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    <div class="bestsellers">
+        <h1>Nuestros mejores artículos</h1>
+        <div class="products">
+            
+            <!-- Producto 1 -->
+            <div class="product">
+                    <img id="img1" src="product1.png" alt="Producto 1">
+                <h3>Funda de auriculares perlada</h3>
+                <p>Ideal para tus esenciales</p>
+                <br>
+                <span class="precio">5,00€</span>
+                <br>
+                <a style="text-decoration: none;" href="tienda/index.html">
+                <div class="boton">
+                        <button>Ver articulo</button>
+                    </div>
+                </a>
+            </div>
 
-        const signupForm = document.getElementById('adminSignupForm');
+            <!-- Producto 2 -->
+            <div class="product">
+                    <img id="img2" src="product2.png" alt="Producto 2">
+                <h3>Bolso marrón</h3>
+                <p>Bolso marrón para guardar tus pertenencias más pequeñas</p>
+                <br>
+                <span class="precio">5,00€</span>
+                <br>
+                <a style="text-decoration: none;" href="tienda/index.html">
+                <div class="boton">
+                    <button>Ver articulo</button>
+                </div>
+                </a>
+            </div>
 
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); 
+        </div>
+    </div>
+</main>
 
-            const email = document.getElementById('correo').value;
-            const password = document.getElementById('contraseña').value;
-            const btn = document.getElementById('btnRegistrar');
+<footer>
+    <div class="footer-container">
+        <!-- Columna 1: Logo y Filosofía -->
+        <div class="footer-column">
+            <img src="logo.png" style="width: 80px;" alt="">
+            <p>Descubre el arte de lo artesano. Piezas únicas creadas con calma para tu día a día.</p>
+            <div class="footer-socials">
+                <a href="https://www.instagram.com/koaproject_">
+                    <img src="instagramicon.png" alt="Instagram">
+                </a>
+            </div>
+        </div>
 
-            // Desactivar botón para evitar múltiples clics
-            btn.disabled = true;
-            btn.innerText = "Registrando...";
+        <!-- Columna 2: Enlaces Rápidos -->
+        <div class="footer-column">
+            <h4>Explorar</h4>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Tienda</a></li>
+                <li><a href="#">Sobre Nosotros</a></li>
+                <li><a href="#">Preguntas Frecuentes</a></li>
+            </ul>
+        </div>
 
-            try {
-                // MÉTODO SIGNUP (Autenticación)
-                const { data, error: authError } = await _supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                });
+        <!-- Columna 3: Contacto y Newsletter -->
+        <div class="footer-column">
+            <h4>Contacto</h4>
+            <p>koaprojectt@gmail.com</p>
+            <p>España</p>
+            <div class="newsletter">
+                <input type="email" placeholder="Tu email...">
+                <button>Unirse</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p>&copy; 2026 KOA Project. Todos los derechos reservados.</p>
+    </div>
+</footer>
 
-                if (authError) throw authError;
-
-                // Verificación de usuario existente (comportamiento de Supabase)
-                if (data.user && data.user.identities && data.user.identities.length === 0) {
-                    alert("¡Este correo ya está registrado! Intenta iniciar sesión.");
-                    window.location.href = "../admin/index.html";
-                    return;
-                }
-
-                // REGISTRO EN TABLA 'usuarios' (Base de datos)
-                // Usamos el ID de auth para vincularlos, es mucho mejor
-                const { error: dbError } = await _supabase
-                    .from('usuarios')
-                    .insert([{ 
-                        email: email, 
-                        created_at: new Date() 
-                    }]);
-
-                if (dbError) {
-                    console.warn("Error al insertar en tabla, pero el usuario de Auth se creó:", dbError.message);
-                }
-
-                alert("¡Registro enviado! Revisa tu email para confirmar la cuenta.");
-                window.location.href = "../admin/index.html";
-
-            } catch (error) {
-                alert("Error: " + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Registrarme";
-            }
-        });
-    </script>
+<!-- Modal de Producto -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+            <div class="modal-image">
+                <img id="modalImg" src="" alt="Producto">
+            </div>
+            <div class="modal-info">
+                <h2 id="modalTitle">Título</h2>
+                <p id="modalDescription">Descripción</p>
+                <br>
+                <span class="precio" id="modalPrice">0,00€</span>
+                
+                <div class="color-selection">
+                    <h4>Escoge un color:</h4>
+                    <div class="colors">
+                        <div class="color-opt" style="background: #ff6e20;" data-color="Blanco"></div>
+                        <div class="color-opt" style="background: #BBC5D1;" data-color="Verde"></div>
+                        <div class="color-opt" style="background: #D2B48C;" data-color="Beige"></div>
+                        <div class="color-opt" style="background: linear-gradient(#D2B48C,#BBC5D1);" data-color="Café"></div>
+                    </div>
+                    <p id="selectedColorText">Color: <span>Selecciona uno</span></p>
+                </div>
+                
+                <button class="btn-buy">Confirmar y Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+
+<script>
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = 'https://ejizpmhlqkhjxbbxdcxo.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ'
+
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  async function cargarProductos() {
+    const { data, error } = await supabase
+      .from('productos')
+      .select('*')
+
+    if (error) {
+      console.error('Error conectando a Supabase:', error.message)
+    } else {
+      console.log('Datos recibidos de Supabase:', data)
+    }
+  }
+
+  // Ejecutar al cargar la página
+  // cargarProductos() 
+</script>
+
 </html>
