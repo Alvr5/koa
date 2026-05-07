@@ -33,17 +33,16 @@
             const password = document.getElementById('contraseña').value;
 
             // Usamos signInWithPassword para loguear (signUp es para crear cuenta nueva)
-            const { data, error } = await _supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+           const { data, error } = await supabase.auth.signUp({
+  email: email,
+  password: password,
+})
 
             if (error) {
                 alert("Error: " + error.message);
             } else {
                 alert("¡Bienvenido, Administrador!");
-                // Aquí podrías redirigir a la página real de gestión
-                // window.location.href = "dashboard.html";
+                 window.location.href = "/admin/dashboard/index.html";
             }
         });
     </script>
