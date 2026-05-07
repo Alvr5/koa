@@ -7,7 +7,7 @@
     <title>KOA</title>
     <meta name="description" content="Crochet a mano, piezas únicas para tu día a día. Descubre el arte de lo artesano con KOA Project.">
     <link rel="stylesheet" href="index.css">
-    <meta name="keywords" content="crochet, regalo, regalos, bolsos hechos a mano">
+    <meta name="keywords" content="crochet, regalo para mujeres, regalos, bolsos hechos a mano">
     <link rel="shortcut icon" href="Group 17 (2).png" type="image/x-icon">
     <meta name="google-site-verification" content="XPIbhl4qsI5apz69GH9fnMqQOYJmYcqk9GgQx5n7xPE" />
 </head>
@@ -31,7 +31,7 @@
             <div class="iconos">
                 <div class="perfil">
                     <a href="" onclick="">
-                        <img src="perfil.png" class="perfilicon" title="perfil" alt="perfil">
+                        <img src="perfil.png" onclick="adminperfil()" class="perfilicon" title="perfil" alt="perfil">
                     </a>
                 </div>
                 <div class="carrito"><img src="carrito.png" alt="carrito"></div>
@@ -168,9 +168,8 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    const perfilIcon = document.querySelector('.perfilicon');
+    const perfilIcon = document.querySelector('.perfil');
     const adminUUID = "7128752a-6442-479c-ba2e-51f583e4353b";
-    adminperfil();
 
     // Función para verificar el estado del usuario al cargar la página
     async function checkUserStatus() {
@@ -185,17 +184,23 @@
             perfilIcon.style.display = "block";
         } else {
             console.log("No hay sesión activa");
-             perfilIcon.style.display = "none"; // Descomenta si quieres ocultarlo si no hay login
+             perfilIcon.style.display = "none"; 
         }
     }
 
     // Función para el login mediante Prompts
     async function adminperfil() {
         const email = prompt("Ingresa el correo electrónico de administrador:");
-        if (!email) return;
+        if (!email) 
+        return;
 
         const password = prompt("Ingresa tu contraseña:");
         if (!password) return;
+
+        if (email == "" || password == "") {
+            alert("No eres administrador.");
+            return;
+        }
 
         try {
             const { data, error } = await _supabase.auth.signInWithPassword({
@@ -212,7 +217,7 @@
                 alert("Bienvenido, Administrador.");
                 window.location.href = "./admin/dashboard";
             } else {
-                alert("Bienvenido, usuario.");
+                alert("No eres administrador.");
                 perfilIcon.style.display = "none";
             }
             
