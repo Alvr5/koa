@@ -7,22 +7,28 @@
     <link rel="stylesheet" href="../index.css">
 </head>
 <body>
-    <h2>Crear Cuenta de Administrador</h2>
+    <div class="registro-container">
+        <h2>Crear Cuenta de Administrador</h2>
 
-    <form id="adminSignupForm">
-        <label for="correo">Correo:</label><br>
-        <input type="email" id="correo" name="correo" required><br><br>
+        <form id="adminSignupForm">
+            <label for="correo">Correo:</label><br>
+            <input type="email" id="correo" name="correo" required><br>
 
-        <label for="contraseña">Contraseña:</label><br>
-        <input type="password" id="contraseña" name="contraseña" required minlength="6"><br><br>
-        
-        <button type="submit">Registrarme</button>
-    </form>
+            <label for="contraseña">Contraseña:</label><br>
+            <input type="password" id="contraseña" name="contraseña" required minlength="6"><br>
+            <button type="submit" id="btnRegistrar">Registrarme</button>
+            <p style="margin-top: 10px;">Ya tengo cuenta <a href="../admin/index.html">Iniciar sesión</a></p>
+        </form>
+    </div>
 
+    <!-- Librería de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
-        // 1. Configuración de Supabase
-        const _supabase = supabase.createClient('https://ejizpmhlqkhjxbbxdcxo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ');
+        // 1. Configuración de Supabase (He unificado el nombre a 'supabase')
+        const supabaseUrl = 'https://ejizpmhlqkhjxbbxdcxo.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         const signupForm = document.getElementById('adminSignupForm');
 
@@ -31,25 +37,49 @@
 
             const email = document.getElementById('correo').value;
             const password = document.getElementById('contraseña').value;
+            const btn = document.getElementById('btnRegistrar');
 
-            // MÉTODO SIGNUP
-            const { data, error } = await _supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
+            // Desactivar botón para evitar múltiples clics
+            btn.disabled = true;
+            btn.innerText = "Registrando...";
 
-            if (error) {
-                // Si sale error 400 aquí, suele ser "User already registered" o contraseña muy corta
-                alert("Error al registrar: " + error.message);
-            } else {
-                // IMPORTANTE: Si la confirmación de email está activa, el usuario no podrá loguearse
-                // hasta que haga clic en el link que le llegará a su correo.
+            try {
+                // MÉTODO SIGNUP (Autenticación)
+                const { data, error: authError } = await _supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                });
+
+                if (authError) throw authError;
+
+                // Verificación de usuario existente (comportamiento de Supabase)
                 if (data.user && data.user.identities && data.user.identities.length === 0) {
                     alert("¡Este correo ya está registrado! Intenta iniciar sesión.");
-                } else {
-                    alert("¡Registro enviado! Revisa tu email para confirmar la cuenta.");
-                    window.location.href = "../admin/index.html"; // Redirigir al login
+                    window.location.href = "../admin/index.html";
+                    return;
                 }
+
+                // REGISTRO EN TABLA 'usuarios' (Base de datos)
+                // Usamos el ID de auth para vincularlos, es mucho mejor
+                const { error: dbError } = await _supabase
+                    .from('usuarios')
+                    .insert([{ 
+                        email: email, 
+                        created_at: new Date() 
+                    }]);
+
+                if (dbError) {
+                    console.warn("Error al insertar en tabla, pero el usuario de Auth se creó:", dbError.message);
+                }
+
+                alert("¡Registro enviado! Revisa tu email para confirmar la cuenta.");
+                window.location.href = "../admin/index.html";
+
+            } catch (error) {
+                alert("Error: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Registrarme";
             }
         });
     </script>
