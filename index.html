@@ -59,13 +59,15 @@
             <!-- Producto 1 -->
             <div class="product">
                     <img id="img1" src="product1.png" alt="Producto 1">
-                <h3>Bolso pequeño perlado</h3>
-                <p>Bolso pequeño perlado para guardar tus pertenencias más pequeñas</p>
+                <h3>Funda de auriculares perlada</h3>
+                <p>Ideal para tus esenciales</p>
                 <br>
                 <span class="precio">5,00€</span>
                 <br>
                 <div class="boton">
-                    <button>Agregar al Carrito</button>
+                    <a href="tienda/index.html">
+                        <button>Ver articulo</button>
+                    </a>
                 </div>
             </div>
 
@@ -78,7 +80,7 @@
                 <span class="precio">5,00€</span>
                 <br>
                 <div class="boton">
-                    <button>Agregar al Carrito</button>
+                    <button>Ver articulo</button>
                 </div>
             </div>
 
@@ -160,56 +162,5 @@
 </body>
 
 <script>
-  const modal = document.getElementById("productModal");
-const closeModal = document.querySelector(".close-modal");
-const modalImg = document.getElementById("modalImg"); // Referencia directa a la imagen del modal
-
-// Función para abrir el modal con info del producto
-document.querySelectorAll('.product').forEach(productCard => {
-    productCard.addEventListener('click', (e) => {
-        if(e.target.tagName === 'BUTTON') return;
-
-        const title = productCard.querySelector('h3').innerText;
-        const price = productCard.querySelector('.precio').innerText;
-        const imgSrc = productCard.querySelector('img').src;
-        const desc = productCard.querySelector('p').innerText;
-
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalPrice").innerText = price;
-        modalImg.src = imgSrc; // Imagen inicial (la del producto clicado)
-        document.getElementById("modalDescription").innerText = desc;
-
-        modal.style.display = "block";
-    });
-});
-
-// Cerrar modal
-closeModal.onclick = () => modal.style.display = "none";
-window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
-
-// Selección de color y cambio de imagen
-document.querySelectorAll('.color-opt').forEach(opt => {
-    opt.onclick = function() {
-        // 1. Gestionar clases activas
-        document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
-        this.classList.add('active');
-
-        // 2. Obtener el nombre del color
-        const nombreColor = this.getAttribute('data-color');
-        document.getElementById("selectedColorText").querySelector('span').innerText = nombreColor;
-
-        // 3. Lógica para cambiar la imagen según el color
-        // Convertimos a minúsculas para evitar errores de escritura (Verde vs verde)
-        if (nombreColor.toLowerCase() === "verde") {
-            modalImg.src = "verde.png"; 
-        } else if (nombreColor.toLowerCase() === "blanco") {
-            modalImg.src = "product1.png"; // O la imagen que corresponda al blanco
-        } else if (nombreColor.toLowerCase() === "beige") {
-            modalImg.src = "marron.png"; // O la imagen que corresponda al marrón
-        } else if (nombreColor.toLowerCase() === "café") {
-            modalImg.src = "cafe.png"; // O la imagen que corresponda al café
-        }
-    }
-});
 </script>
 </html>
