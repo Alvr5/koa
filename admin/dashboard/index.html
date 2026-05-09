@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="../.././index.css">
     <title>Panel Admin - KOA</title>
     <style>
         /* Ocultamos el contenido por defecto hasta confirmar que es el admin */
@@ -38,7 +38,7 @@
         // Si hay error, no hay usuario, o el ID no está en la lista de admins
         if (error || !user || !adminsAutorizados.includes(user.id)) {
             console.error("Acceso no autorizado");
-            window.location.replace("index.html/../admin/../index.html"); 
+            window.location.replace("../../../index.html"); 
             return; 
         }
 
@@ -50,7 +50,7 @@
 
     async function handleLogout() {
         await _supabase.auth.signOut();
-        window.location.replace("../../index.html");
+        window.location.replace("../../../index.html");
     }
 
     document.getElementById('btn-logout').addEventListener('click', handleLogout);
