@@ -1,11 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/index.css">
+    <title>Panel Admin - KOA</title>
+    <style>
+        /* Ocultamos el contenido por defecto hasta confirmar que es el admin */
+        body { display: none; font-family: sans-serif; padding: 20px; }
+        button { cursor: pointer; padding: 8px 12px; margin: 5px 0; }
+    </style>
 </head>
 <body>
-    
+    <h1 class="bienvenidatexto">Bienvenido al Panel de Administración</h1>
+
+    <h2 class="useremail">Bienvenido, <span id="user-email"></span>!</h2>
+
+    <h2 class="opciones">Opciones que puedes realizar:</h2>
+    <ul class="listaadmin">
+        <li><button onclick="location.href='./gestionar'" style="color: black;">Gestionar productos de la tienda</button></li>
+        <li style="color: black;"><button style="color: black;">Configurar la imagen principal</button></li>
+        <li><button id="btn-logout"> <img class="logoutimg" src="/arrowlogout.png" alt="">Cerrar Sesión</button></li>
+    </ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    const supabaseUrl = 'https://ejizpmhlqkhjxbbxdcxo.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ';
+    const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const adminsAutorizados = ["7128752a-6442-479c-ba2e-51f583e4353b", "dcba6ea9-c743-4c85-8296-ed2de5ad0e30"];
+
+    async function checkAdmin() {
+        // Obtenemos el usuario que inició sesión en la página anterior
+        const { data: { user }, error } = await _supabase.auth.getUser();
+
+        // Si hay error, no hay usuario, o el ID no está en la lista de admins
+        if (error || !user || !adminsAutorizados.includes(user.id)) {
+            console.error("Acceso no autorizado");
+            window.location.replace("index.html/../admin/../index.html"); 
+            return; 
+        }
+
+        // Si pasa la validación, mostramos el contenido
+        document.body.style.display = "block";
+        document.getElementById('user-email').textContent = user.email;
+        console.log("Panel desbloqueado para:", user.email);
+    }
+
+    async function handleLogout() {
+        await _supabase.auth.signOut();
+        window.location.replace("../../index.html");
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', handleLogout);
+
+    // Iniciar verificación
+    checkAdmin();
+</script>
 </body>
 </html>
