@@ -691,7 +691,11 @@ footer {
     opacity: 1;
 }
 
-
+ .productos{
+       flex-direction: row;
+    gap: 20px;
+    margin: 0 auto;
+    }
 
 
 
