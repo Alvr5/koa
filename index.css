@@ -386,6 +386,12 @@ footer {
     letter-spacing: 3px;
 }
 
+.productos{
+         width: 1190px;
+    display: flex;
+    justify-content: center;
+}
+
 /* Grid de productos responsivo */
 .products-grid {
     display: grid;
@@ -455,14 +461,6 @@ footer {
 
 
 
-
-
-
-
-
-
-
-
 /* Estilos del Modal */
 .modal {
     display: none; 
@@ -475,14 +473,15 @@ footer {
 }
 
 .modal-content {
-    background-color: #fdfbf7;
-    margin: 5% auto;
+     background-color: #fdfbf7;
+    margin: 190px auto;
     padding: 40px;
     width: 70%;
     max-width: 900px;
     border-radius: 15px;
     position: relative;
     animation: fadeIn 0.3s;
+    height: max-content;
 }
 
 @keyframes fadeIn {
@@ -633,6 +632,70 @@ footer {
 }
 
 
+.bienvenidatexto{
+    font-family: sans-serif;
+    width: max-content;
+    display: inline;
+}
+
+.useremail{
+    font-family: sans-serif;
+    width: max-content;
+    display: inline;
+    float: right;
+}
+
+.opciones{
+    font-family: sans-serif;
+    width: max-content;
+    display: block;
+    margin-top: 20px;
+}
+
+
+.listaadmin{
+    list-style: none;
+    display: block;
+    margin-top: 20px;
+}
+
+.listaadmin li{
+    margin-bottom: 10px;
+}
+
+.listaadmin li button{
+    padding: 10px 15px;
+    background-color: #d4a373;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+#btn-logout {
+    align-items: center;
+    display: flex;
+    color: #1f3252ff;
+}
+
+#btn-logout:hover {
+    color: white;
+    background-color: red;
+}
+
+.logoutimg{
+    width: 20px;
+    margin-right: 10px;
+    filter: grayscale(1);
+    opacity: 1;
+}
+
+
+
+
+
+
 /*MOVILES*/
 
 @media (max-width: 400px) {
@@ -687,19 +750,21 @@ footer {
     }
 
     .perfil{
-         z-index: 1;
+     z-index: 1;
     display: flex;
     scale: 0.7;
     position: absolute;
     width: max-content;
-    left: 190px;
+    left: 330px;
+    top: 20px;
     }
     .carrito{
-         z-index: 1;
+            z-index: 1;
     display: flex;
     scale: 0.7;
     position: absolute;
-    right: 190px;
+    right: 60px;
+    top: 24px;
     }
 
     .iconos{
@@ -707,5 +772,12 @@ footer {
     height: 20px;
     justify-content: center;
     display: flex;
+    }
+
+
+    .productos{
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
     }
 }
