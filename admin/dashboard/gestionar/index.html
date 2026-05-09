@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Productos - KOA</title>
+    <style>
+        body { display: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f9f9f9; }
+        .producto-item {    background: white;
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+    list-style: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    width: 1810px;}
+        .volver { margin-bottom: 20px; display: inline-block; color: #666; text-decoration: none; }
+        
+        /* Estilos del Formulario */
+        .formulariocrearproducto { 
+            display: none; /* Oculto por defecto */
+            background: white; padding: 20px; border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 30px; 
+        }
+        .formulariocrearproducto h3 { margin-top: 0; }
+        .formulariocrearproducto input { display: block; width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn-guardar { background: #d2b48c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        .btn-cancelar { background: #eee; color: #333; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+    <a href="../index.html" class="volver">← Volver al Panel</a>
+    <h1>Gestión de Inventario</h1>
+    
+    <!-- Botón para mostrar el formulario -->
+    <button id="btn-nuevo-producto" style="padding: 10px 20px; cursor: pointer; margin-bottom: 20px;">+ Añadir Producto</button>
+
+    <!-- Formulario de Creación -->
+    <div class="formulariocrearproducto" id="seccion-formulario">
+        <h3>Nuevo Producto</h3>
+        <form id="form-producto">
+            <input type="text" id="nombreproducto" placeholder="Nombre del producto (ej: Bolso Crochet)" required>
+            <input type="number" id="precioproducto" step="0.01" placeholder="Precio (ej: 12.50)" required>
+            <input type="file" id="imagen" placeholder="Selecciona la imagen" accept="image/*">
+            <input type="text" id="descripcionproducto" placeholder="Descripción del producto" required>
+            <input type="text" id="color" placeholder="Color = green,red... máximo 2 colores separados por coma">
+            <button type="submit" class="btn-guardar">Guardar Producto</button>
+            <button type="button" class="btn-cancelar" id="btn-cerrar-form">Cancelar</button>
+        </form>
+    </div>
+
+    <ul id="lista-productos"></ul>
+
+    <div class="modaleditproducto" style="padding: 10px; background-color: white; width: 90%; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.307);">
+        <input type="text" id="nombreeditado">
+        <input type="number" id="precioeditado" step="0.01">
+        <input type="file" id="imageneditada" accept="image/*">
+        <input type="text" id="coloreditado" placeholder="Color = green,red... máximo 2 colores separados por coma">
+        <button class="btn-guardar" id="btn-guardar-edit">Actualizar Producto</button>
+        <button class="btn-cancelar" id="btn-cancelar-edit">Cancelar</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ======================================================
+   CONFIGURACIÓN SUPABASE
+====================================================== */
+
+const supabaseUrl = 'https://ejizpmhlqkhjxbbxdcxo.supabase.co';
+
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ';
+
+const _supabase = supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+);
+
+/* ======================================================
+   ADMINS AUTORIZADOS
+====================================================== */
+
+const adminsAutorizados = [
+    "7128752a-6442-479c-ba2e-51f583e4353b",
+    "dcba6ea9-c743-4c85-8296-ed2de5ad0e30"
+];
+
+/* ======================================================
+   REFERENCIAS DOM
+====================================================== */
+
+const listaProductos =
+    document.getElementById('lista-productos');
+
+const formularioSeccion =
+    document.getElementById('seccion-formulario');
+
+const formProducto =
+    document.getElementById('form-producto');
+
+const formularioeditar =
+    document.querySelector('.modaleditproducto');
+
+formularioeditar.style.display = 'none';
+
+let productoActual = null;
+
+/* ======================================================
+   INICIALIZAR
+====================================================== */
+
+async function inicializar() {
+
+    const { data: { user }, error } =
+        await _supabase.auth.getUser();
+
+    if (
+        error ||
+        !user ||
+        !adminsAutorizados.includes(user.id)
+    ) {
+
+        alert("Acceso no autorizado");
+
+        window.location.replace("../../index.html");
+
+        return;
+    }
+
+    document.body.style.display = 'block';
+
+    await getProductos();
+}
+
+/* ======================================================
+   OBTENER PRODUCTOS
+====================================================== */
+
+async function getProductos() {
+
+    try {
+
+        const { data, error } =
+            await _supabase
+                .from('productos')
+                .select('*')
+                .order('created_at', {
+                    ascending: false
+                });
+
+        if (error) throw error;
+
+        listaProductos.innerHTML = '';
+
+        if (!data || data.length === 0) {
+
+            listaProductos.innerHTML =
+                '<li>No hay productos registrados.</li>';
+
+            return;
+        }
+
+        data.forEach(producto => {
+
+            const li = document.createElement('li');
+
+            li.className = 'producto-item';
+
+            li.innerHTML = `
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:15px;
+                    width:100%;
+                ">
+
+                    <img
+                        src="${producto.imagen || '../../logo.png'}"
+                        style="
+                            width:60px;
+                            height:60px;
+                            object-fit:cover;
+                            border-radius:8px;
+                        "
+                    >
+
+                    <div>
+                        <strong>${producto.nombre}</strong>
+
+                        <p style="
+                            margin:0;
+                            color:#666;
+                        ">
+                            ${producto.descripcion || 'Sin descripción'}
+                        </p>
+                    </div>
+
+                </div>
+
+                <span style="
+                    margin-left:auto;
+                    margin-right:20px;
+                    font-weight:bold;
+                ">
+                    ${producto.precio ?
+                        producto.precio.toFixed(2)
+                        :
+                        "0.00"
+                    }€
+                </span>
+
+                <button
+                    class="btn-editar"
+                    onclick="abrirModalEditar('${producto.id}')"
+                    style="
+                        background:#eee;
+                        border:none;
+                        padding:10px 20px;
+                        border-radius:6px;
+                        cursor:pointer;
+                    "
+                >
+                    Editar
+                </button>
+            `;
+
+            listaProductos.appendChild(li);
+        });
+
+    } catch(err) {
+
+        console.error(err);
+
+        alert("Error cargando productos");
+    }
+}
+
+/* ======================================================
+   REFRESH PRODUCTOS
+====================================================== */
+
+async function refreshProductos() {
+
+    listaProductos.innerHTML = `
+        <div style="
+            padding:20px;
+            text-align:center;
+            width:100%;
+        ">
+            Actualizando productos...
+        </div>
+    `;
+
+    await getProductos();
+}
+
+/* ======================================================
+   CREAR PRODUCTO
+====================================================== */
+
+formProducto.addEventListener('submit', async (e) => {
+
+    e.preventDefault();
+
+    const nombre =
+        document.getElementById('nombreproducto').value;
+
+    const precio =
+        document.getElementById('precioproducto').value;
+
+    const descripcion =
+        document.getElementById('descripcionproducto').value;
+
+    const imagenFile =
+        document.getElementById('imagen').files[0];
+
+    const colorTexto =
+        document.getElementById('color').value;
+
+    const colores =
+        colorTexto.split(',');
+
+    if (!imagenFile) {
+
+        alert("Selecciona una imagen");
+
+        return;
+    }
+
+    try {
+
+        const btnGuardar =
+            e.target.querySelector('.btn-guardar');
+
+        btnGuardar.innerText = "Subiendo...";
+
+        btnGuardar.disabled = true;
+
+        /* =========================
+           SUBIR IMAGEN
+        ========================= */
+
+        const fileExt =
+            imagenFile.name.split('.').pop();
+
+        const fileName =
+            `${Date.now()}.${fileExt}`;
+
+        const { error: uploadError } =
+            await _supabase.storage
+                .from('Productos')
+                .upload(fileName, imagenFile);
+
+        if (uploadError) throw uploadError;
+
+        /* =========================
+           URL PÚBLICA
+        ========================= */
+
+        const { data: urlData } =
+            _supabase.storage
+                .from('Productos')
+                .getPublicUrl(fileName);
+
+        const publicUrl =
+            urlData.publicUrl;
+
+        /* =========================
+           INSERTAR EN DB
+        ========================= */
+
+        const { error: insertError } =
+            await _supabase
+                .from('productos')
+                .insert([{
+                    nombre,
+                    descripcion,
+                    precio: parseFloat(precio),
+                    imagen: publicUrl,
+                    color1: colores[0]?.trim() || null,
+                    color2: colores[1]?.trim() || null
+                }]);
+
+        if (insertError) throw insertError;
+
+        alert("Producto creado");
+
+        formProducto.reset();
+
+        formularioSeccion.style.display = 'none';
+
+        btnGuardar.innerText = "Guardar Producto";
+
+        btnGuardar.disabled = false;
+
+        await refreshProductos();
+
+    } catch(err) {
+
+        console.error(err);
+
+        alert(err.message);
+
+        const btnGuardar =
+            e.target.querySelector('.btn-guardar');
+
+        btnGuardar.innerText = "Guardar Producto";
+
+        btnGuardar.disabled = false;
+    }
+});
+
+/* ======================================================
+   ABRIR MODAL EDITAR
+====================================================== */
+
+async function abrirModalEditar(id) {
+
+    formularioeditar.style.display = 'block';
+
+    productoActual = id;
+
+    try {
+
+        const { data: producto, error } =
+            await _supabase
+                .from('productos')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+        if (error) throw error;
+
+        document.getElementById('nombreeditado').value =
+            producto.nombre || '';
+
+        document.getElementById('precioeditado').value =
+            producto.precio || '';
+
+        const colores = [
+            producto.color1,
+            producto.color2
+        ].filter(Boolean);
+
+        document.getElementById('coloreditado').value =
+            colores.join(',');
+
+    } catch(err) {
+
+        console.error(err);
+
+        alert("Error cargando producto");
+    }
+}
+
+/* ======================================================
+   CANCELAR MODAL
+====================================================== */
+
+document
+.getElementById('btn-cancelar-edit')
+.addEventListener('click', () => {
+
+    formularioeditar.style.display = 'none';
+});
+
+/* ======================================================
+   ACTUALIZAR PRODUCTO
+====================================================== */
+
+document
+.getElementById('btn-guardar-edit')
+.addEventListener('click', async () => {
+
+    try {
+
+        const nombre =
+            document.getElementById('nombreeditado').value;
+
+        const precio =
+            document.getElementById('precioeditado').value;
+
+        const colores =
+            document.getElementById('coloreditado')
+            .value
+            .split(',');
+
+        const imagenFile =
+            document.getElementById('imageneditada')
+            .files[0];
+
+        let nuevaImagen = null;
+
+        /* =========================
+           SUBIR NUEVA IMAGEN
+        ========================= */
+
+        if (imagenFile) {
+
+            const fileExt =
+                imagenFile.name.split('.').pop();
+
+            const fileName =
+                `${Date.now()}.${fileExt}`;
+
+            const { error: uploadError } =
+                await _supabase.storage
+                    .from('Productos')
+                    .upload(fileName, imagenFile);
+
+            if (uploadError) throw uploadError;
+
+            const { data: urlData } =
+                _supabase.storage
+                    .from('Productos')
+                    .getPublicUrl(fileName);
+
+            nuevaImagen =
+                urlData.publicUrl;
+        }
+
+        /* =========================
+           DATOS UPDATE
+        ========================= */
+
+        const updateData = {
+
+            nombre,
+
+            precio: parseFloat(precio),
+
+            color1: colores[0]?.trim() || null,
+
+            color2: colores[1]?.trim() || null
+        };
+
+        if (nuevaImagen) {
+            updateData.imagen = nuevaImagen;
+        }
+
+        /* =========================
+           UPDATE DB
+        ========================= */
+
+        const { error } =
+            await _supabase
+                .from('productos')
+                .update(updateData)
+                .eq('id', productoActual);
+
+        if (error) throw error;
+
+        alert("Producto actualizado");
+
+        formularioeditar.style.display = 'none';
+
+        await refreshProductos();
+
+    } catch(err) {
+
+        console.error(err);
+
+        alert("Error actualizando producto");
+    }
+});
+
+/* ======================================================
+   BOTONES INTERFAZ
+====================================================== */
+
+document
+.getElementById('btn-nuevo-producto')
+.onclick = () => {
+
+    formularioSeccion.style.display = 'block';
+};
+
+document
+.getElementById('btn-cerrar-form')
+.onclick = () => {
+
+    formularioSeccion.style.display = 'none';
+};
+
+/* ======================================================
+   CERRAR MODAL CLICK FUERA
+====================================================== */
+
+window.addEventListener('click', (e) => {
+
+    if (e.target === formularioeditar) {
+
+        formularioeditar.style.display = 'none';
+    }
+});
+
+/* ======================================================
+   INICIAR APP
+====================================================== */
+
+inicializar();
+</script>
+</body>
+</html>
