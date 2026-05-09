@@ -20,6 +20,12 @@
         <div class="headertitulo">
             <section class="section2">
                 <a href="../index.html"><img src="../logo.png" alt="Logo" class="logo"></a>
+                <!-- Cambiamos href="" por href="javascript:void(0)" para que no recargue la página -->
+<div class="perfil">
+    <a href="javascript:void(0)" onclick="gestionaradmin()">
+        <img src="../perfil.png" class="perfilicon" title="Panel de Gestión" alt="perfil">
+    </a>
+</div>
                 <div class="carrito">0<img src="../carrito.png" style="margin-left: 10px;" alt="carrito"></div>
             </section>
             <nav>
@@ -35,60 +41,21 @@
 
     <main class="tienda-container">
         <header class="tienda-header">
-            <h1>Nuestra Colección</h1>
+            <h1 style="font-family: sans-serif;">Nuestra Colección</h1>
             <p>Piezas exclusivas tejidas a mano por KOA.</p>
         </header>
 
         <div class="products-grid">
-            <div class="producto" 
-                 data-colores='{"Blanco": "#ec7634", "Verde": "#b8dc7d"}'
-                 data-img-blanco="../product1.png" 
-                 data-img-verde="../verde.png" 
-                 data-img-beige="../product1_beige.png">
-                <div class="product-img-container">
-                    <img src="../product1.png" alt="Funda auriculares">
-                </div>
-                <h3>Funda de auriculares perlada</h3>
-                <p>Protección con estilo artesanal.</p>
-                <span class="precio">5,00€</span>
-                <br><button class="btn-ver">Ver detalles</button>
-            </div>
-
-            <div class="producto" 
-                 data-colores='{"Café": "#5d4037", "Beige": "#D2B48C", "Azul": "#produc2blue"}'
-                 data-img-cafe="../product2.png" 
-                 data-img-beige="../product2_beige.png"
-                 data-img-azul="../produc2blue.png">
-                <div class="product-img-container">
-                    <img src="../product2.png" alt="Bolso marrón">
-                </div>
-                <h3>Bolso Crochet Marrón</h3>
-                <p>Elegancia para tu día a día.</p>
-                <span class="precio">12,00€</span>
-                <br><button class="btn-ver">Ver detalles</button>
-            </div>
-
-            <div class="producto" 
-                 data-colores='{"Gris": "#808080", "Amarillo": "#ffff00"}'
-                 data-img-gris="../bolso4 (1).png" 
-                 data-img-amarillo="../bolso4amarillo.png">
-                <div class="product-img-container">
-                    <img src="../bolso4 (1).png" alt="Bolso gris">
-                </div>
-                <h3>Bolso Casual Gris</h3>
-                <p>Textura suave y resistente.</p>
-                <span class="precio">12,00€</span>
-                <br><button class="btn-ver">Ver detalles</button>
-            </div>
+            <div class="productos" id="productos-lista"></div>
         </div>
     </main>
 
     <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <div class="modal-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="modal-body" style="display: grid;grid-template-columns: 1fr 1fr;gap: 20px;align-items: center;">
                 <div class="modal-image">
-                    <img id="modalImg" src="" alt="Producto" style="width: 100%; border-radius: 10px; height: 400px; object-fit: cover;">
+                    <img id="modalImg" src="" alt="Producto" style="width: 100%; border-radius: 10px; height: 400px; object-fit: contain;">
                 </div>
                 <div class="modal-info">
                     <h2 id="modalTitle">Título</h2>
@@ -109,56 +76,145 @@
         </div>
     </div>
 
-    <script>
-        const modal = document.getElementById("productModal");
-        const closeModal = document.querySelector(".close-modal");
-        const modalImg = document.getElementById("modalImg");
-        const colorsContainer = document.querySelector(".colors");
-        let productoActivo = null;
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>// 1. CONFIGURACIÓN SUPABASE
+    const supabaseUrl = 'https://ejizpmhlqkhjxbbxdcxo.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ';
+    const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Abrir Modal
-        document.querySelectorAll('.btn-ver').forEach(btn => {
-            btn.addEventListener('click', () => {
-                productoActivo = btn.closest('.producto');
+    const contenedorProductos = document.getElementById('productos-lista');
+    const adminsAutorizados = ["7128752a-6442-479c-ba2e-51f583e4353b", "dcba6ea9-c743-4c85-8296-ed2de5ad0e30"];
+
+    // ==========================================
+    // FUNCIÓN 1: CARGAR PRODUCTOS (PÚBLICO)
+    // Esta función se ejecuta siempre al cargar la página
+    // ==========================================
+    async function cargarTienda() {
+        try {
+            // Traemos los productos sin preguntar quién es el usuario
+            const { data: productos, error } = await _supabase
+                .from('productos')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            contenedorProductos.innerHTML = "";
+
+            if (!productos || productos.length === 0) {
+                contenedorProductos.innerHTML = "<p>Próximamente nuevas piezas...</p>";
+                return;
+            }
+
+            productos.forEach(producto => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'producto';
                 
-                document.getElementById("modalTitle").innerText = productoActivo.querySelector('h3').innerText;
-                document.getElementById("modalPrice").innerText = productoActivo.querySelector('.precio').innerText;
-                modalImg.src = productoActivo.querySelector('img').src;
-                document.getElementById("modalDescription").innerText = productoActivo.querySelector('p').innerText;
-                document.getElementById("selectedColorText").querySelector('span').innerText = "Ninguno";
-
-                // Generar círculos de colores
-                colorsContainer.innerHTML = "";
-                const coloresData = productoActivo.getAttribute('data-colores');
+                const imagenFinal = producto.imagen_url || producto.imagen || '../logo.png';
                 
-                if (coloresData) {
-                    const colores = JSON.parse(coloresData);
-                    for (const [nombre, codigo] of Object.entries(colores)) {
-                        const div = document.createElement("div");
-                        div.className = "color-opt";
-                        div.style.cssText = `width:30px; height:30px; border-radius:50%; background:${codigo}; cursor:pointer; border:1px solid #ddd;`;
-                        
-                        div.onclick = () => {
-                            document.querySelectorAll('.color-opt').forEach(o => o.style.border = "1px solid #ddd");
-                            div.style.border = "3px solid #333";
-                            
-                            document.getElementById("selectedColorText").querySelector('span').innerText = nombre;
-                            const nuevaImg = productoActivo.getAttribute(`data-img-${nombre.toLowerCase()}`);
-                            if (nuevaImg) modalImg.src = nuevaImg;
-                        };
-                        colorsContainer.appendChild(div);
-                    }
-                }
+                productDiv.innerHTML = `
+                    <div class="product-img-container">
+                        <img src="${imagenFinal}" alt="${producto.nombre}" onerror="this.src='../logo.png'">
+                    </div>
+                    <h3 style="font-family: sans-serif;">${producto.nombre}</h3>
+                    <p style="font-family: sans-serif;">${producto.descripcion || 'Artesanía KOA'}</p>
+                    <span class="precio">${producto.precio ? producto.precio.toFixed(2) : "0.00"}€</span>
+                    <br>
+                    <button class="btn-ver">Ver detalles</button>
+                `;
 
-                modal.style.display = "block";
+                productDiv.querySelector('.btn-ver').onclick = () => abrirModal(producto);
+                contenedorProductos.appendChild(productDiv);
             });
+        } catch (error) {
+            console.error("Error en la carga:", error.message);
+        }
+    }
+
+    // ==========================================
+    // FUNCIÓN 2: GESTIÓN DE ACCESO (PRIVADO)
+    // Solo se activa cuando alguien hace clic en el icono de perfil
+    // ==========================================
+    async function gestionaradmin() {
+        const { data: { user }, error } = await _supabase.auth.getUser();
+
+        // Si no hay usuario logueado
+        if (error || !user) {
+            alert("Acceso restringido. Por favor, inicia sesión como administrador.");
+            // Opcional: window.location.href = "../login.html";
+            return;
+        }
+
+        // Si hay usuario, comprobamos si su ID está en la lista de admins
+        if (adminsAutorizados.includes(user.id)) {
+            window.location.href = "../admin/dashboard/";
+        } else {
+            alert("Lo sentimos, no tienes permisos de administrador para acceder aquí.");
+        }
+    }
+
+    // Iniciar la tienda automáticamente al entrar
+    cargarTienda();
+
+const modal = document.getElementById("productModal");
+const closeModal = document.querySelector(".close-modal");
+
+const modalImg = document.getElementById("modalImg");
+const modalTitle = document.getElementById("modalTitle");
+const modalDescription = document.getElementById("modalDescription");
+const modalPrice = document.getElementById("modalPrice");
+
+function abrirModal(producto) {
+    modal.style.display = "flex";
+
+    modalImg.src = producto.imagen_url || producto.imagen || "../logo.png";
+    modalTitle.textContent = producto.nombre;
+    modalDescription.textContent = producto.descripcion || "Artesanía KOA";
+    modalPrice.textContent = `${producto.precio?.toFixed(2) || "0.00"}€`;
+
+    // COLORES
+    const colorsContainer = document.querySelector(".colors");
+    const selectedColorText = document.querySelector("#selectedColorText span");
+
+    colorsContainer.innerHTML = "";
+
+    if (producto.colores && producto.colores.length > 0) {
+        producto.colores.forEach(color => {
+            const colorBtn = document.createElement("button");
+
+            colorBtn.style.width = "35px";
+            colorBtn.style.height = "35px";
+            colorBtn.style.borderRadius = "50%";
+            colorBtn.style.border = "2px solid #ddd";
+            colorBtn.style.cursor = "pointer";
+            colorBtn.style.background = color;
+
+            colorBtn.onclick = () => {
+                selectedColorText.textContent = color;
+            };
+
+            colorsContainer.appendChild(colorBtn);
         });
+    } else {
+        colorsContainer.innerHTML = "<p>No hay colores disponibles</p>";
+    }
+}
 
-        // Cerrar Modal
-        closeModal.onclick = () => modal.style.display = "none";
-        window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
+// CERRAR MODAL
+closeModal.onclick = () => {
+    modal.style.display = "none";
+};
+
+// CERRAR AL HACER CLICK FUERA
+window.onclick = (e) => {
+    if (e.target === modal) {
+        modal.style.display = "none";
+    }
+};
+</script>
     </script>
-
+    </script>
     
 <footer>
     <div class="footer-container">
