@@ -63,14 +63,6 @@
                     <img id="img1" src="product1.png" alt="Producto 1">
                 <h3>Funda de auriculares perlada</h3>
                 <p>Ideal para tus esenciales</p>
-                <br>
-                <span class="precio">5,00€</span>
-                <br>
-                <a style="text-decoration: none;" href="tienda/index.html">
-                <div class="boton">
-                        <button>Ver articulo</button>
-                    </div>
-                </a>
             </div>
 
             <!-- Producto 2 -->
@@ -78,14 +70,6 @@
                     <img id="img2" src="product2.png" alt="Producto 2">
                 <h3>Bolso marrón</h3>
                 <p>Bolso marrón para guardar tus pertenencias más pequeñas</p>
-                <br>
-                <span class="precio">5,00€</span>
-                <br>
-                <a style="text-decoration: none;" href="tienda/index.html">
-                <div class="boton">
-                    <button>Ver articulo</button>
-                </div>
-                </a>
             </div>
 
         </div>
@@ -167,38 +151,52 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqaXpwbWhscWtoanhiYnhkY3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwOTA5OTQsImV4cCI6MjA5MzY2Njk5NH0.PxmfU4avcXrD4ZOwGYdvYRM-UfRQLJsRhBkXCPSCcsQ';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    const perfilIcon = document.querySelector('.perfil');
-    const adminUUID = "7128752a-6442-479c-ba2e-51f583e4353b";
+    const perfilContenedor = document.querySelector('.perfil');
+    const perfilImg = document.querySelector('.perfilicon');
+    
+    // Lista de IDs permitidos como admin
+    const adminsAutorizados = [
+        "7128752a-6442-479c-ba2e-51f583e4353b",
+        "dcba6ea9-c743-4c85-8296-ed2de5ad0e30"
+    ];
 
-    // Función para verificar el estado del usuario al cargar la página
-    async function checkUserStatus() {
-        const { data: { user }, error } = await _supabase.auth.getUser();
+    // Función que se ejecuta al cargar para ver si ya hay una sesión
+    async function inicializarPagina() {
+        const { data: { user } } = await _supabase.auth.getUser();
         
-        if (user && user.id === adminUUID) {
-            console.log("Admin detectado");
-            perfilIcon.style.border = "2px solid gold"; // Ejemplo visual de que es admin
-            perfilIcon.style.display = "block";
-        } else if (user) {
-            console.log("Usuario estándar logueado");
-            perfilIcon.style.display = "block";
-        } else {
-            console.log("No hay sesión activa");
+        if (user && adminsAutorizados.includes(user.id)) {
+            console.log("Admin ya logueado");
+            perfilContenedor.style.border = "2px solid gold";
+            perfilContenedor.style.borderRadius = "50%";
         }
     }
 
-    // Función para el login mediante Prompts
-    async function adminperfil() {
+    // Función principal que maneja el clic en el icono de perfil
+    async function manejarClicPerfil(e) {
+        if(e) e.preventDefault(); // Evita que el enlace recargue la página
+
+        // Primero verificamos si YA está logueado
+        const { data: { user } } = await _supabase.auth.getUser();
+
+        if (user) {
+            // Si ya hay usuario, comprobamos si es admin
+            if (adminsAutorizados.includes(user.id)) {
+                window.location.href = "./admin/dashboard"; // Ajusta esta ruta según tu carpeta real
+            } else {
+                alert("Sesión activa como usuario estándar. No tienes acceso al panel.");
+            }
+        } else {
+            // Si NO hay usuario, pedimos login
+            await loginAdmin();
+        }
+    }
+
+    async function loginAdmin() {
         const email = prompt("Ingresa el correo electrónico de administrador:");
-        if (!email) 
-        return;
+        if (!email) return;
 
         const password = prompt("Ingresa tu contraseña:");
         if (!password) return;
-
-        if (email == "" || password == "") {
-            alert("No eres administrador.");
-            return;
-        }
 
         try {
             const { data, error } = await _supabase.auth.signInWithPassword({
@@ -208,31 +206,51 @@
 
             if (error) throw error;
 
-            alert("¡Inicio de sesión exitoso!");
-            
-            // Verificamos si el que acaba de entrar es el admin
-            if (data.user.id === adminUUID || data.user.id === "dcba6ea9-c743-4c85-8296-ed2de5ad0e30") {
-                alert("Bienvenido, Administrador.");
-                window.location.href = "./admin/dashboard";
+            if (data.user && adminsAutorizados.includes(data.user.id)) {
+                alert("¡Bienvenido, Administrador!");
+                window.location.href = "./admin/dashboard"; // Ajusta esta ruta
             } else {
-                alert("No eres administrador.");
+                alert("Login correcto, pero no tienes permisos de administrador.");
             }
-            
-            checkUserStatus(); // Actualizar la interfaz
 
         } catch (error) {
             alert("Error: " + error.message);
         }
     }
 
-    // Ejecutar la comprobación inicial
-    checkUserStatus();
+    async function adminperfil() {
+    const email = prompt("Correo de administrador:");
+    if (!email) return;
+    const password = prompt("Contraseña:");
+    if (!password) return;
 
-    // Si quieres que el icono de perfil dispare el login:
-    // perfilIcon.addEventListener('click', (e) => {
-    //    e.preventDefault();
-    //    adminperfil();
-    // });
+    try {
+        const { data, error } = await _supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
+
+        if (error) throw error;
+
+        const admins = ["7128752a-6442-479c-ba2e-51f583e4353b", "dcba6ea9-c743-4c85-8296-ed2de5ad0e30"];
+
+        if (data.user && admins.includes(data.user.id)) {
+            alert("Acceso concedido.");
+            window.location.href = "./admin/dashboard/"; 
+        } else {
+            alert("No tienes permisos de administrador.");
+            await _supabase.auth.signOut();
+        }
+    } catch (error) {
+        alert("Error de autenticación: " + error.message);
+    }
+}
+
+    // Event Listeners
+    perfilImg.addEventListener('click', manejarClicPerfil);
+    
+    // Ejecutar check inicial sin redirección
+    inicializarPagina();
 </script>
 
 </html>
