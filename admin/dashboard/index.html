@@ -50,7 +50,7 @@
 
     async function handleLogout() {
         await _supabase.auth.signOut();
-        window.location.replace("../../../index.html");
+        window.location.replace("./../../index.html");
     }
 
     document.getElementById('btn-logout').addEventListener('click', handleLogout);
