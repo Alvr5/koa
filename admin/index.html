@@ -65,7 +65,7 @@
                     .from('usuarios')
                     .insert([{ 
                         email: email, 
-                        created_at: new Date() 
+                        created_at: new Date()
                     }]);
 
                 if (dbError) {
