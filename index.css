@@ -163,7 +163,7 @@ main .fondo-img {
     border-radius: 4px;
     transition: transform 0.3s;
     justify-content: center;
-    height: 620px;
+    height: max-content;
     animation-name: opacidad;
     animation-duration: 1s;
     background: #80808005;
@@ -576,7 +576,7 @@ footer {
         .producto { text-align: center; transition: 0.3s; padding: 15px; border-radius: 10px; }
         .producto:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); transform: translateY(-5px); }
         
-        .product-img-container {    box-shadow: 0 5px 15px rgb(0 0 0 / 20%);
+        .product-img-container {
     transform: translateY(-5px);
     padding: 20px 20px; }
         .product-img-container img { width: 250px; height: 300px; object-fit: contain; }
